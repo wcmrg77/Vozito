@@ -454,7 +454,14 @@ class RecordingWidget:
         sw = self.root.winfo_screenwidth()
         sh = self.root.winfo_screenheight()
         self.root.geometry(f"{self.W}x{self.H}+{(sw - self.W) // 2}+{sh - self.H - 32}")
+        # Map the window once so macOS applies wm_overrideredirect properly,
+        # then keep it mapped but invisible via alpha for runtime show/hide
+        # (avoids Space-switching that withdraw/deiconify triggers).
         self.root.withdraw()
+        self.root.deiconify()
+        self.root.wm_attributes("-topmost", True)
+        self.root.lift()
+        self.root.wm_attributes("-alpha", 0.0)
 
         self.root.after(80, self._poll)
 
@@ -522,7 +529,8 @@ class RecordingWidget:
                     self._reset_bars()
                     self._history = [0.0] * self.N_BARS
                     self._animating = True
-                    self.root.deiconify()
+                    self.root.wm_attributes("-alpha", 1.0)
+                    self.root.lift()
                     self._animate()
                 elif msg == "transcribing":
                     # freeze bars at idle while the API call runs
@@ -530,7 +538,7 @@ class RecordingWidget:
                     self._reset_bars()
                 elif msg == "hide":
                     self._animating = False
-                    self.root.withdraw()
+                    self.root.wm_attributes("-alpha", 0.0)
                 elif msg == "quit":
                     self.root.quit()
                     return
