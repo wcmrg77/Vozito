@@ -108,6 +108,7 @@ Edit the constants at the top of `voice_dictate.py`:
 | `FORMAT_MODEL` | `ministral-3b-latest` | LLM model for formatting |
 | `FORMAT_TIMEOUT` | `2.0` | Timeout (seconds) for formatting — falls back to raw text |
 | `SAMPLE_RATE` | `16000` | Audio sample rate |
+| `DISCO` | `True` | Rainbow waveform bars — each bar cycles through the color spectrum while recording |
 
 ## License
 
